@@ -22,7 +22,7 @@ class _HomeScreeenState extends State<HomeScreeen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Products'),
+        title: Text('Best Selling'),
       ),
       body: FutureBuilder<List<Product>>(
         future: _productData, // Provide the future you want to display
@@ -35,8 +35,16 @@ class _HomeScreeenState extends State<HomeScreeen> {
           } else if (snapshot.hasData) {
             // Successfully loaded the data
             List<Product> productList = snapshot.data!;
-            return ListView.builder(
-              itemCount: productList.length,
+            return GridView.builder(
+              padding: EdgeInsets.all(8.0),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Number of columns in the grid
+                crossAxisSpacing: 8.0, // Horizontal spacing between items
+                mainAxisSpacing: 8.0, // Vertical spacing between items
+                childAspectRatio:
+                    0.75, // Aspect ratio of each item (width/height)
+              ),
+              itemCount: productList.length, // Display all items
               itemBuilder: (context, index) {
                 return ProductWidget(product: productList[index]);
               },
@@ -57,15 +65,54 @@ class ProductWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      leading: product.image != null
-          ? Image.network(product.image!,
-              width: 50, height: 50, fit: BoxFit.cover)
-          : Icon(Icons.image, size: 50),
-      title: Text(product.productName ?? 'Unnamed Product'),
-      subtitle: Text(product.productDetails ?? 'No details available'),
-      trailing: Text('\$${product.price ?? "N/A"}'),
+    return Card(
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Wrap the image with ClipRRect to make it curved
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(8.0)), // Curved top corners
+              child: product.image != null
+                  ? Image.network(
+                      product.image!,
+                      width: double.infinity,
+                      height: 120,
+                      fit: BoxFit.cover,
+                    )
+                  : Icon(Icons.image, size: 120, color: Colors.grey),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              product.productName ?? 'Unnamed Product',
+              style: TextStyle(fontWeight: FontWeight.bold),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              product.productDetails ?? 'No details available',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 12.0, color: Colors.grey),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '\$${product.price ?? "N/A"}',
+              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
