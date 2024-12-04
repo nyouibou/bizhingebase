@@ -1,32 +1,28 @@
 import 'package:http/http.dart' as http;
-import 'dart:convert'; // Import this to handle JSON decoding
-import '../model/catmodelresp.dart'; // Your CatModelApiResp class
+
+import '../model/categorymodel.dart';
+import '../model/foodmodel.dart';
 
 class ApiService {
-  static const String baseUrl = "https://apib2b-production.up.railway.app/api/";
+  static const String baseUrl = 'https://apib2b-production.up.railway.app/api';
 
-  // This method now returns a Future<List<CatModelApiResp>> instead of a single object
-  Future<List<CatModelApiResp>> fetchCategories() async {
-    final response = await http.get(Uri.parse("${baseUrl}categories"));
+  Future<List<Category>> fetchCategories() async {
+    final response = await http.get(Uri.parse('$baseUrl/categories/'));
 
     if (response.statusCode == 200) {
-      // Parse the JSON response body into a list of CatModelApiResp
-      return catModelApiRespFromJson(
-          response.body); // This now returns a List<CatModelApiResp>
+      return categoryFromJson(response.body);
     } else {
-      throw Exception("Failed to load categories");
+      throw Exception('Failed to fetch categories');
     }
   }
 
-  Future<List<Product>> fetchAllProducts() async {
-    final response = await http.get(Uri.parse("${baseUrl}products"));
+  Future<List<Product>> fetchProducts() async {
+    final response = await http.get(Uri.parse('$baseUrl/products/'));
 
     if (response.statusCode == 200) {
-      // Parse the JSON response body into a list of Product objects
-      List<dynamic> data = json.decode(response.body);
-      return List<Product>.from(data.map((x) => Product.fromJson(x)));
+      return productFromJson(response.body);
     } else {
-      throw Exception("Failed to load products");
+      throw Exception('Failed to fetch products');
     }
   }
 }

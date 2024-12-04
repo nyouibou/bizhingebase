@@ -1,8 +1,8 @@
 // ignore_for_file: use_key_in_widget_constructors
 
+import 'package:bizhingebase/view/homescreen/homescreen.dart';
 import 'package:flutter/material.dart';
-
-import 'view/homescreen/homescreeen.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,14 +11,14 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'B2Bapp',
       theme: ThemeData(
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreeen(),
+      home: HomeScreen(),
     );
   }
 }
