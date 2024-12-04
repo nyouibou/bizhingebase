@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../controller/app_controller.dart';
+import '../widgets/catlist.dart';
 import 'categoryproduct.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,58 +15,96 @@ class HomeScreen extends StatelessWidget {
         title: Text('Categories & Products'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Categories Section
-            Obx(() {
-              if (controller.isLoadingCategories.value) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (controller.categories.isEmpty) {
-                return Center(child: Text('No categories available.'));
-              }
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: controller.categories.length,
-                itemBuilder: (context, index) {
-                  final category = controller.categories[index];
-                  return ListTile(
-                    title: Text(category.name ?? 'Unnamed Category'),
-                    trailing: Icon(Icons.arrow_forward),
-                    onTap: () {
-                      // Navigate to CategoryProductPage
-                      Get.to(() => CategoryProductPage(category: category));
-                    },
-                  );
-                },
-              );
-            }),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Top Categories"),
+              // Categories Section
+              Cataglist(controller: controller),
 
-            Divider(),
+              Divider(),
+              Text(
+                "Best Selling",
+                style: TextStyle(),
+              ),
 
-            // All Products Section
-            Obx(() {
-              if (controller.isLoadingProducts.value) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (controller.products.isEmpty) {
-                return Center(child: Text('No products available.'));
-              }
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: controller.products.length,
-                itemBuilder: (context, index) {
-                  final product = controller.products[index];
-                  return ListTile(
-                    title: Text(product.productName ?? 'Unnamed Product'),
-                    subtitle: Text('Price: ${product.price ?? 'N/A'}'),
-                  );
-                },
-              );
-            }),
-          ],
+              // All Products Section
+              Obx(() {
+                if (controller.isLoadingProducts.value) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (controller.products.isEmpty) {
+                  return Center(child: Text('No products available.'));
+                }
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: 4,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Number of columns
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.7, // Adjust to control the card size
+                  ),
+                  itemBuilder: (context, index) {
+                    final product = controller.products[index];
+                    return Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Product Image
+                          product.image != null
+                              ? Expanded(
+                                  child: Image.network(
+                                    product.image!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Icon(Icons.image_not_supported),
+                                  ),
+                                )
+                              : Expanded(
+                                  child: Icon(Icons.image, size: 50),
+                                ),
+                          // Product Name
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              product.productName ?? 'Unnamed Product',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          // Product Price
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              'Price: ${product.price ?? 'N/A'}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );
