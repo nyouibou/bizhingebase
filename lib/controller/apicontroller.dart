@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
 import '../model/categorymodel.dart';
-import '../model/foodmodel.dart';
+import '../model/productmodel.dart';
 
 class ApiService {
   static const String baseUrl = 'https://apib2b-production.up.railway.app/api';

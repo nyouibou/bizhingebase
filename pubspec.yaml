@@ -7,11 +7,14 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  bottom_navy_bar: ^6.1.0
   carousel_slider: ^5.0.0
   flutter:
     sdk: flutter
   get: ^4.6.6
+  google_nav_bar: ^5.0.7
   http: ^1.2.2
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:

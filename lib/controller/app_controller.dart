@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../model/categorymodel.dart';
-import '../model/foodmodel.dart';
+import '../model/productmodel.dart';
 import 'apicontroller.dart';
 
 class AppController extends GetxController {
